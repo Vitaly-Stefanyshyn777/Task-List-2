@@ -26,9 +26,7 @@ const EventList: React.FC<EventListProps> = ({ events, onEdit, onDelete }) => (
         </p>
         <p>{e.description}</p>
         <p>Важливість: {e.importance}</p>
-        <div style={{ display: "flex", gap: 10 }}>
-          <EventActions event={e} onEdit={onEdit} onDelete={onDelete} />
-        </div>
+        <EventActions event={e} onEdit={onEdit} onDelete={onDelete} />
       </li>
     ))}
   </ul>

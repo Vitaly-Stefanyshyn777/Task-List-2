@@ -5,7 +5,7 @@ import EventForm from "@/features/events/components/EventForm";
 import EditEventModal from "@/features/events/components/EditEventModal";
 import CalendarView from "@/features/events/components/CalendarView";
 import { EventItem } from "@/features/events/types";
-import { selectFilteredEvents } from "@/features/events/selectorsFilter";
+import { selectFilteredEvents } from "@/features/events/selectors";
 import EventList from "@/features/events/components/EventList";
 
 const EventsPage: React.FC = () => {
@@ -57,6 +57,7 @@ const EventsPage: React.FC = () => {
   const filteredEvents = useAppSelector((state) =>
     selectFilteredEvents(state, filter, searchTerm, selectedDate)
   );
+
   return (
     <div style={{ padding: 20 }}>
       <h1>Мої події</h1>

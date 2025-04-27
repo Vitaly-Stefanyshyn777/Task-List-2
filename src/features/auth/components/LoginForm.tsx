@@ -38,6 +38,7 @@ const LoginForm: React.FC = () => {
 
   const inputStyle = {
     padding: "10px",
+    width: "14em",
     borderRadius: "8px",
     border: "1px solid #ccc",
   };

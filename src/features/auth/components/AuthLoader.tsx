@@ -1,7 +1,7 @@
-import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { useEffect } from "react";
 import { useAppDispatch } from "@/app/hooks";
 import { setUser } from "../authSlice";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 const AuthLoader: React.FC = () => {
   const dispatch = useAppDispatch();

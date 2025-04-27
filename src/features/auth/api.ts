@@ -1,9 +1,9 @@
-import { STORAGE_KEYS } from "@/constants/storageKeys";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "@/firebase";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 export const loginUser = async (email: string, password: string) => {
   const userCredential = await signInWithEmailAndPassword(

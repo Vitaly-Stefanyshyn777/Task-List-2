@@ -14,84 +14,88 @@ import {
 } from "firebase/firestore";
 import { EventItem } from "./types";
 
-export const fetchEvents = createAsyncThunk(
-  "events/fetchEvents",
-  async (userId: string, { rejectWithValue }) => {
-    try {
-      const eventsQuery = query(
-        collection(db, "events"),
-        where("userId", "==", userId)
-      );
-      const querySnapshot = await getDocs(eventsQuery);
-      return querySnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt
-            ? (data.createdAt as Timestamp).toDate().toISOString()
-            : null,
-        };
-      }) as EventItem[];
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const addEvent = createAsyncThunk(
-  "events/addEvent",
-  async (
-    {
-      userId,
-      event,
-    }: { userId: string; event: Omit<EventItem, "id" | "createdAt"> },
-    { rejectWithValue }
-  ) => {
-    try {
-      const newEvent = {
-        ...event,
-        userId,
-        createdAt: serverTimestamp(),
-      };
-      const docRef = await addDoc(collection(db, "events"), newEvent);
+export const fetchEvents = createAsyncThunk<
+  EventItem[],
+  string,
+  { rejectValue: string }
+>("events/fetchEvents", async (userId, { rejectWithValue }) => {
+  try {
+    const eventsQuery = query(
+      collection(db, "events"),
+      where("userId", "==", userId)
+    );
+    const querySnapshot = await getDocs(eventsQuery);
+    const events = querySnapshot.docs.map((docSnapshot) => {
+      const data = docSnapshot.data();
       return {
-        id: docRef.id,
-        ...event,
-        createdAt: new Date().toISOString(),
+        id: docSnapshot.id,
+        ...data,
+        createdAt: data.createdAt
+          ? (data.createdAt as Timestamp).toDate().toISOString()
+          : null,
       } as EventItem;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
+    });
+    return events;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to fetch events";
+    return rejectWithValue(message);
   }
-);
+});
 
-export const updateEvent = createAsyncThunk(
+export const addEvent = createAsyncThunk<
+  EventItem,
+  { userId: string; event: Omit<EventItem, "id" | "createdAt"> },
+  { rejectValue: string }
+>("events/addEvent", async ({ userId, event }, { rejectWithValue }) => {
+  try {
+    const newEventData = {
+      ...event,
+      userId,
+      createdAt: serverTimestamp(),
+    };
+    const docRef = await addDoc(collection(db, "events"), newEventData);
+    return {
+      id: docRef.id,
+      ...event,
+      createdAt: new Date().toISOString(),
+    } as EventItem;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to add event";
+    return rejectWithValue(message);
+  }
+});
+
+export const updateEvent = createAsyncThunk<
+  { id: string; updatedData: Partial<EventItem> },
+  { eventId: string; updatedData: Partial<EventItem> },
+  { rejectValue: string }
+>(
   "events/updateEvent",
-  async (
-    {
-      eventId,
-      updatedData,
-    }: { eventId: string; updatedData: Partial<EventItem> },
-    { rejectWithValue }
-  ) => {
+  async ({ eventId, updatedData }, { rejectWithValue }) => {
     try {
       await updateDoc(doc(db, "events", eventId), updatedData);
       return { id: eventId, updatedData };
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to update event";
+      return rejectWithValue(message);
     }
   }
 );
 
-export const deleteEvent = createAsyncThunk(
-  "events/deleteEvent",
-  async ({ eventId }: { eventId: string }, { rejectWithValue }) => {
-    try {
-      await deleteDoc(doc(db, "events", eventId));
-      return eventId;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
+export const deleteEvent = createAsyncThunk<
+  string,
+  { eventId: string },
+  { rejectValue: string }
+>("events/deleteEvent", async ({ eventId }, { rejectWithValue }) => {
+  try {
+    await deleteDoc(doc(db, "events", eventId));
+    return eventId;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to delete event";
+    return rejectWithValue(message);
   }
-);
+});
