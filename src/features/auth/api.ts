@@ -1,3 +1,4 @@
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -12,9 +13,9 @@ export const loginUser = async (email: string, password: string) => {
   );
   if (userCredential.user) {
     const token = await userCredential.user.getIdToken();
-    localStorage.setItem("token", token);
-    localStorage.setItem("email", userCredential.user.email ?? "");
-    localStorage.setItem("uid", userCredential.user.uid);
+    localStorage.setItem(STORAGE_KEYS.token, token);
+    localStorage.setItem(STORAGE_KEYS.email, userCredential.user.email ?? "");
+    localStorage.setItem(STORAGE_KEYS.uid, userCredential.user.uid);
   }
   return userCredential.user;
 };
@@ -27,9 +28,9 @@ export const registerUser = async (email: string, password: string) => {
   );
   if (userCredential.user) {
     const token = await userCredential.user.getIdToken();
-    localStorage.setItem("token", token);
-    localStorage.setItem("email", userCredential.user.email ?? "");
-    localStorage.setItem("uid", userCredential.user.uid);
+    localStorage.setItem(STORAGE_KEYS.token, token);
+    localStorage.setItem(STORAGE_KEYS.email, userCredential.user.email ?? "");
+    localStorage.setItem(STORAGE_KEYS.uid, userCredential.user.uid);
   }
   return userCredential.user;
 };

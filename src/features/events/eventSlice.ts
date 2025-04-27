@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { EventItem } from "./types";
-import { fetchEvents, addEvent, updateEvent, deleteEvent } from "./api";
+import {
+  fetchEvents,
+  addEvent,
+  updateEvent,
+  deleteEvent,
+} from "./eventsThunks";
 
 interface EventsState {
   events: EventItem[];
@@ -30,14 +35,23 @@ const eventSlice = createSlice({
       })
       .addCase(fetchEvents.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload ?? action.error.message ?? null;
+      })
+      .addCase(addEvent.rejected, (state, action) => {
+        state.error = action.payload ?? action.error.message ?? null;
+      })
+      .addCase(updateEvent.rejected, (state, action) => {
+        state.error = action.payload ?? action.error.message ?? null;
+      })
+      .addCase(deleteEvent.rejected, (state, action) => {
+        state.error = action.payload ?? action.error.message ?? null;
       })
       .addCase(addEvent.fulfilled, (state, action) => {
         state.events.push(action.payload);
       })
       .addCase(updateEvent.fulfilled, (state, action) => {
-        const { id, updatedData } = action.payload;
-        const index = state.events.findIndex((event) => event.id === id);
+        const { eventId, updatedData } = action.payload;
+        const index = state.events.findIndex((event) => event.id === eventId);
         if (index !== -1) {
           state.events[index] = { ...state.events[index], ...updatedData };
         }

@@ -5,10 +5,12 @@ import EventForm from "@/features/events/components/EventForm";
 import EditEventModal from "@/features/events/components/EditEventModal";
 import CalendarView from "@/features/events/components/CalendarView";
 import { EventItem } from "@/features/events/types";
+import { selectFilteredEvents } from "@/features/events/selectorsFilter";
+import EventList from "@/features/events/components/EventList";
 
 const EventsPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { events, loading, error } = useAppSelector((state) => state.events);
+  const { loading, error } = useAppSelector((state) => state.events);
   const user = useAppSelector((state) => state.auth.user);
 
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -52,14 +54,9 @@ const EventsPage: React.FC = () => {
     setIsModalOpen(false);
     setEditingEvent(null);
   };
-  const filteredEvents = events
-    .filter((e) => filter === "all" || e.importance === filter)
-    .filter(
-      (e) =>
-        !searchTerm || e.title.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((e) => !selectedDate || e.date === selectedDate);
-
+  const filteredEvents = useAppSelector((state) =>
+    selectFilteredEvents(state, filter, searchTerm, selectedDate)
+  );
   return (
     <div style={{ padding: 20 }}>
       <h1>Мої події</h1>
@@ -119,59 +116,19 @@ const EventsPage: React.FC = () => {
             <h2>
               {selectedDate ? `Події на ${selectedDate}` : "Виберіть дату"}
             </h2>
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              {filteredEvents.map((e) => (
-                <li
-                  key={e.id}
-                  style={{
-                    marginBottom: 20,
-                    border: "1px solid #ccc",
-                    padding: 10,
-                    borderRadius: 8,
-                  }}
-                >
-                  <h3>{e.title}</h3>
-                  <p>
-                    Дата: {e.date} | Час: {e.time}
-                  </p>
-                  <p>{e.description}</p>
-                  <p>Важливість: {e.importance}</p>
-                  <div style={{ display: "flex", gap: 10 }}>
-                    <button onClick={() => handleEditClick(e)}>
-                      Редагувати
-                    </button>
-                    <button onClick={() => handleDelete(e.id)}>Видалити</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <EventList
+              events={filteredEvents}
+              onEdit={handleEditClick}
+              onDelete={handleDelete}
+            />
           </div>
         </div>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {filteredEvents.map((e) => (
-            <li
-              key={e.id}
-              style={{
-                marginBottom: 20,
-                border: "1px solid #ccc",
-                padding: 10,
-                borderRadius: 8,
-              }}
-            >
-              <h3>{e.title}</h3>
-              <p>
-                Дата: {e.date} | Час: {e.time}
-              </p>
-              <p>{e.description}</p>
-              <p>Важливість: {e.importance}</p>
-              <div style={{ display: "flex", gap: 10 }}>
-                <button onClick={() => handleEditClick(e)}>Редагувати</button>
-                <button onClick={() => handleDelete(e.id)}>Видалити</button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <EventList
+          events={filteredEvents}
+          onEdit={handleEditClick}
+          onDelete={handleDelete}
+        />
       )}
 
       {isModalOpen && editingEvent && (
