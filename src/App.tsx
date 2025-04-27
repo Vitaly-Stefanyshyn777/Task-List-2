@@ -14,8 +14,6 @@ const App: React.FC = () => (
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route element={<PrivateRoute />}>
-        {/* <Route path="/" element={<DashboardPage />} /> */}
-        {/* <Route path="/events" element={<EventsPage />} />{" "} */}
         <Route path="/" element={<EventsPage />} />{" "}
       </Route>
     </Routes>
