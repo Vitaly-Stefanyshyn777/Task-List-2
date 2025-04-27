@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EventItem } from "@/features/events/eventSlice";
+import { EventItem } from "@/features/events/types";
 
 interface EditEventModalProps {
   event: EventItem;
