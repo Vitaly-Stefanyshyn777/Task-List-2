@@ -11,7 +11,6 @@ interface Props {
 const CalendarView: React.FC<Props> = ({ selectedDate, onSelectDate }) => {
   const events = useAppSelector((s) => s.events.events);
 
-  // Підсвічуємо дні, в які є події
   const hasEventOn = (date: Date) => {
     const iso = date.toISOString().split("T")[0];
     return events.some((e) => e.date === iso);
