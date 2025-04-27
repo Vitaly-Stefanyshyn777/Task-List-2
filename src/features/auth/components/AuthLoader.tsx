@@ -1,5 +1,3 @@
-// src/features/auth/components/AuthLoader.tsx
-
 import { useEffect } from "react";
 import { useAppDispatch } from "@/app/hooks";
 import { setUser } from "../authSlice";

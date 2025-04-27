@@ -1,8 +1,5 @@
-// src/features/events/components/EventForm.tsx
-
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-// import { addEvent, updateEvent } from "../eventSlice";
 import { addEvent, updateEvent } from "@/features/events/api";
 import { useNavigate } from "react-router-dom";
 

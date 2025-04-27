@@ -1,8 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 // import weatherReducer from "./slices/weatherReducer";
-import themeReducer from "@/features/theme/themeSlice";
+// import themeReducer from "@/features/theme/themeSlice";
 import eventsReducer from "@/features/events/eventSlice";
-import weatherReducer from "@/features/weather/weatherSlice";
 import authReducer from "@/features/auth/authSlice";
 
 const preloadedState = {
@@ -14,9 +13,7 @@ const preloadedState = {
 };
 export const store = configureStore({
   reducer: {
-    weather: weatherReducer,
     auth: authReducer,
-    theme: themeReducer,
     events: eventsReducer,
   },
   preloadedState,

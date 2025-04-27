@@ -1,18 +1,10 @@
-// src/features/events/eventsThunks.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
-// import { fetchEventsFromFirestore } from "./apiFirestore";
 import {
   addEventToFirestore,
   deleteEventFromFirestore,
   fetchEventsFromFirestore,
   updateEventInFirestore,
 } from "./eventsApi";
-// import {
-//   fetchEventsFromFirestore,
-//   addEventToFirestore,
-//   updateEventInFirestore,
-//   deleteEventFromFirestore,
-// } from "./api";
 
 export const fetchEvents = createAsyncThunk(
   "events/fetchEvents",
