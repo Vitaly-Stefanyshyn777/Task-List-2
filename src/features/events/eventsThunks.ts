@@ -1,3 +1,4 @@
+import { EventItem } from "./types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   addEventToFirestore,
@@ -16,8 +17,18 @@ export const fetchEvents = createAsyncThunk(
 
 export const addEvent = createAsyncThunk(
   "events/addEvent",
-  async ({ userId, eventData }: { userId: string; eventData: any }) => {
-    const newEvent = await addEventToFirestore(userId, eventData);
+  async ({
+    userId,
+    eventData,
+  }: {
+    userId: string;
+    eventData: Omit<EventItem, "id" | "createdAt">;
+  }) => {
+    const fullEventData = {
+      ...eventData,
+      createdAt: new Date().toISOString(),
+    };
+    const newEvent = await addEventToFirestore(userId, fullEventData);
     return newEvent;
   }
 );
@@ -31,7 +42,7 @@ export const updateEvent = createAsyncThunk(
   }: {
     userId: string;
     eventId: string;
-    updatedData: any;
+    updatedData: Partial<EventItem>;
   }) => {
     await updateEventInFirestore(userId, eventId, updatedData);
     return { eventId, updatedData };

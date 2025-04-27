@@ -38,7 +38,6 @@ const EventForm: React.FC<EventFormProps> = ({ existingEvent }) => {
     if (existingEvent) {
       await dispatch(
         updateEvent({
-          userId: user.uid,
           eventId: existingEvent.id,
           updatedData: eventData,
         })
@@ -88,7 +87,9 @@ const EventForm: React.FC<EventFormProps> = ({ existingEvent }) => {
       />
       <select
         value={importance}
-        onChange={(e) => setImportance(e.target.value as any)}
+        onChange={(e) =>
+          setImportance(e.target.value as "normal" | "important" | "critical")
+        }
         required
       >
         <option value="normal">Звичайна</option>

@@ -12,18 +12,34 @@ const LoginForm: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     dispatch(setLoading(true));
 
     try {
       const user = await loginUser(email, password);
       dispatch(setUser({ email: user.email ?? "", uid: user.uid }));
-      navigate("/"); // Перекидуємо на головну після логіну
-    } catch (error: any) {
-      dispatch(setError(error?.message || "Помилка входу"));
+      navigate("/");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Помилка входу";
+      dispatch(setError(errorMessage));
     } finally {
       dispatch(setLoading(false));
     }
+  };
+
+  const inputStyle = {
+    padding: "10px",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+  };
+
+  const buttonStyle = {
+    padding: "12px",
+    backgroundColor: "#4CAF50",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
   };
 
   return (
@@ -43,11 +59,7 @@ const LoginForm: React.FC = () => {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Введіть email"
         required
-        style={{
-          padding: "10px",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-        }}
+        style={inputStyle}
       />
       <input
         type="password"
@@ -55,23 +67,9 @@ const LoginForm: React.FC = () => {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Введіть пароль"
         required
-        style={{
-          padding: "10px",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-        }}
+        style={inputStyle}
       />
-      <button
-        type="submit"
-        style={{
-          padding: "12px",
-          backgroundColor: "#4CAF50",
-          color: "#fff",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-        }}
-      >
+      <button type="submit" style={buttonStyle}>
         Увійти
       </button>
     </form>

@@ -21,8 +21,10 @@ const RegisterForm: React.FC = () => {
       dispatch(setLoading(true));
       const user = await registerUser(email, password);
       dispatch(setUser({ email: user.email!, uid: user.uid }));
-    } catch (error: any) {
-      dispatch(setError(error.message));
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Помилка реєстрації";
+      dispatch(setError(errorMessage));
     } finally {
       dispatch(setLoading(false));
     }

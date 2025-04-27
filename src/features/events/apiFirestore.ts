@@ -8,7 +8,12 @@ import {
   getDocs,
 } from "firebase/firestore";
 
-export const addEvent = async (userId: string, event: any) => {
+import { EventItem } from "@/features/events/types";
+
+export const addEvent = async (
+  userId: string,
+  event: Omit<EventItem, "id">
+) => {
   const eventsCollection = collection(db, "users", userId, "events");
   const docRef = await addDoc(eventsCollection, event);
   return { ...event, id: docRef.id };
@@ -17,7 +22,7 @@ export const addEvent = async (userId: string, event: any) => {
 export const updateEventInFirestore = async (
   userId: string,
   eventId: string,
-  updatedData: any
+  updatedData: Partial<EventItem>
 ) => {
   const eventRef = doc(db, "users", userId, "events", eventId);
   await updateDoc(eventRef, updatedData);
