@@ -60,8 +60,6 @@ const EventsPage: React.FC = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Мої події</h1>
-
       <div style={{ marginBottom: 20 }}>
         <EventForm />
       </div>

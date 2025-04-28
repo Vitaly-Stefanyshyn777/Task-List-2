@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 const LoginPage: React.FC = () => {
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Увійти</h1>
       <LoginForm />
       <p style={{ marginTop: "1rem", textAlign: "center" }}>
         Немає акаунта? <Link to="/register">Зареєструватися</Link>
