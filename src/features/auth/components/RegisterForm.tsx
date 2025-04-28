@@ -33,6 +33,22 @@ const RegisterForm: React.FC = () => {
     }
   };
 
+  const inputStyle: React.CSSProperties = {
+    padding: "10px",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    fontSize: "1rem",
+  };
+  const buttonStyle: React.CSSProperties = {
+    padding: "12px",
+    backgroundColor: "#4CAF50",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "1rem",
+  };
+
   return (
     <form
       onSubmit={handleRegister}
@@ -50,6 +66,7 @@ const RegisterForm: React.FC = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        style={inputStyle}
       />
       <input
         type="password"
@@ -57,6 +74,7 @@ const RegisterForm: React.FC = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
+        style={inputStyle}
       />
       <input
         type="password"
@@ -64,8 +82,11 @@ const RegisterForm: React.FC = () => {
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         required
+        style={inputStyle}
       />
-      <button type="submit">Зареєструватись</button>
+      <button type="submit" style={buttonStyle}>
+        Зареєструватись
+      </button>
     </form>
   );
 };
