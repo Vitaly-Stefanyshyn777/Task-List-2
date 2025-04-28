@@ -1,39 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAppDispatch } from "@/app/hooks";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api";
 import { setUser, setLoading, setError } from "../authSlice";
 
-interface RegisterFormData {
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
 const RegisterForm: React.FC = () => {
   const dispatch = useAppDispatch();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<RegisterFormData>();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const onSubmit: SubmitHandler<RegisterFormData> = async ({
-    email,
-    password,
-    confirmPassword,
-  }) => {
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     if (password !== confirmPassword) {
       dispatch(setError("Паролі не співпадають."));
       return;
     }
-    dispatch(setLoading(true));
+
     try {
+      dispatch(setLoading(true));
       const user = await registerUser(email, password);
-      dispatch(setUser({ email: user.email ?? "", uid: user.uid }));
-    } catch (error) {
-      const msg = error instanceof Error ? error.message : "Помилка реєстрації";
-      dispatch(setError(msg));
+      dispatch(setUser({ email: user.email!, uid: user.uid }));
+      navigate("/");
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Помилка реєстрації";
+      dispatch(setError(errorMessage));
     } finally {
       dispatch(setLoading(false));
     }
@@ -41,7 +35,7 @@ const RegisterForm: React.FC = () => {
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleRegister}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -50,39 +44,28 @@ const RegisterForm: React.FC = () => {
         margin: "0 auto",
       }}
     >
-      <div>
-        <input
-          type="email"
-          placeholder="Email"
-          {...register("email", { required: "Email обов'язковий" })}
-        />
-        {errors.email && (
-          <span style={{ color: "red" }}>{errors.email.message}</span>
-        )}
-      </div>
-      <div>
-        <input
-          type="password"
-          placeholder="Пароль"
-          {...register("password", { required: "Пароль обов'язковий" })}
-        />
-        {errors.password && (
-          <span style={{ color: "red" }}>{errors.password.message}</span>
-        )}
-      </div>
-      <div>
-        <input
-          type="password"
-          placeholder="Підтвердіть пароль"
-          {...register("confirmPassword", { required: "Підтвердьте пароль" })}
-        />
-        {errors.confirmPassword && (
-          <span style={{ color: "red" }}>{errors.confirmPassword.message}</span>
-        )}
-      </div>
-      <button type="submit" disabled={isSubmitting}>
-        Зареєструватись
-      </button>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Пароль"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Підтвердіть пароль"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        required
+      />
+      <button type="submit">Зареєструватись</button>
     </form>
   );
 };
