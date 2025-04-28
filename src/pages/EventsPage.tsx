@@ -7,11 +7,23 @@ import CalendarView from "@/features/events/components/CalendarView";
 import { EventItem } from "@/features/events/types";
 import { selectFilteredEvents } from "@/features/events/selectors";
 import EventList from "@/features/events/components/EventList";
+import { useNavigate } from "react-router-dom";
+import { clearUser } from "@/features/auth/authSlice";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 const EventsPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { loading, error } = useAppSelector((state) => state.events);
   const user = useAppSelector((state) => state.auth.user);
+
+  const handleLogout = () => {
+    localStorage.removeItem(STORAGE_KEYS.token);
+    localStorage.removeItem(STORAGE_KEYS.email);
+    localStorage.removeItem(STORAGE_KEYS.uid);
+    dispatch(clearUser());
+    navigate("/login");
+  };
 
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [filter, setFilter] = useState<
@@ -60,6 +72,21 @@ const EventsPage: React.FC = () => {
 
   return (
     <div style={{ padding: 20 }}>
+      <div style={{ textAlign: "right", marginBottom: "1rem" }}>
+        <button
+          onClick={handleLogout}
+          style={{
+            padding: "8px",
+            backgroundColor: "#f44336",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          Вийти
+        </button>
+      </div>
       <div style={{ marginBottom: 20 }}>
         <EventForm />
       </div>
